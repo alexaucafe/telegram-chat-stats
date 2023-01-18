@@ -11,7 +11,7 @@ Max:   49 messages (20 replies, 10 forwarded)
 
 ## Exporting chat
 
-Open any group with Telegram Desktop > ```Group Info``` > three-dot-menu > ```Export chat history```
+Open any group with Telegram Desktop > ```Group Info``` > three-dot-menu > ```Export chat history```.
 Change format to ```json```. Other settings won't have any effect
 
 ## Usage
