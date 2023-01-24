@@ -17,17 +17,22 @@ class Chat:
     def get_messages(self):
 
         group_messages = self.group_data["messages"]
-        group_messages = [message for message in group_messages if message["type"] == "message"]
+        # group_messages = [message for message in group_messages if message["type"] == "message"]
 
         return group_messages
 
     def get_members(self):
         members = {}
         for message in self.group_messages:
-            if message["type"] == "service": continue
+            if message["type"] == "service":
+                member_id = message["actor_id"]
+                member_name = message["actor"]
+            elif message["type"] == "message":
+                member_id = message["from_id"]
+                member_name = message["from"]
+            else:
+                continue
 
-            member_id = message["from_id"]
-            member_name = message["from"]
             if member_id not in members:
                 members[member_id] = member_name
             elif members[member_id] != member_name:
@@ -49,7 +54,7 @@ class Chat:
 
     def get_member_stats(self, member_id):
 
-        member_messages = [message for message in self.group_messages if message["from_id"] == member_id]
+        member_messages = [message for message in self.group_messages if message.get("from_id", message.get("actor_id")) == member_id]
         messages_count = len(member_messages)
         forwards_count = len([message for message in member_messages if "forwarded_from" in message.keys()])
         replies_count = len([message for message in member_messages if "reply_to_message_id" in message.keys()])
