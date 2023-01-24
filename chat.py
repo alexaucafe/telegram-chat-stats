@@ -54,7 +54,7 @@ class Chat:
 
     def get_member_stats(self, member_id):
 
-        member_messages = [message for message in self.group_messages if message["from_id"] == member_id]
+        member_messages = [message for message in self.group_messages if message.get("from_id", message.get("actor_id")) == member_id]
         messages_count = len(member_messages)
         forwards_count = len([message for message in member_messages if "forwarded_from" in message.keys()])
         replies_count = len([message for message in member_messages if "reply_to_message_id" in message.keys()])
@@ -84,5 +84,5 @@ class Chat:
         
         return group_stats
 
-group = Chat("result1.json")
-print(group.get_members())
+group = Chat("result.json")
+print(group.get_member_stats("user1103708556"))
