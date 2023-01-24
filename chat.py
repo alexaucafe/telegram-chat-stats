@@ -83,6 +83,3 @@ class Chat:
             group_stats["members"].append(member_stats)
         
         return group_stats
-
-group = Chat("result.json")
-print(group.get_member_stats("user1103708556"))
