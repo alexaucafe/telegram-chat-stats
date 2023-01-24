@@ -17,17 +17,22 @@ class Chat:
     def get_messages(self):
 
         group_messages = self.group_data["messages"]
-        group_messages = [message for message in group_messages if message["type"] == "message"]
+        # group_messages = [message for message in group_messages if message["type"] == "message"]
 
         return group_messages
 
     def get_members(self):
         members = {}
         for message in self.group_messages:
-            if message["type"] == "service": continue
+            if message["type"] == "service":
+                member_id = message["actor_id"]
+                member_name = message["actor"]
+            elif message["type"] == "message":
+                member_id = message["from_id"]
+                member_name = message["from"]
+            else:
+                continue
 
-            member_id = message["from_id"]
-            member_name = message["from"]
             if member_id not in members:
                 members[member_id] = member_name
             elif members[member_id] != member_name:
@@ -78,3 +83,6 @@ class Chat:
             group_stats["members"].append(member_stats)
         
         return group_stats
+
+group = Chat("result1.json")
+print(group.get_members())
