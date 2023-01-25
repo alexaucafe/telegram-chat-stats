@@ -4,15 +4,14 @@ def main():
 
     group = Chat()
     group_stats = group.get_group_stats()
-    group_members_sorted = sorted(group_stats["members"], key = lambda member: member["messages_count"], reverse=True)
 
-    longest_first_name = max(group_members_sorted, key = lambda member: len(member["first_name"]))
+    longest_first_name = max(group_stats["members"], key = lambda member: len(member["first_name"]))
     longest_name_len = len(longest_first_name["first_name"])
 
     spaces = " "*(longest_name_len + 2)
     print("{}{}\n".format(spaces, group_stats["name"]))
 
-    for member in group_members_sorted:
+    for member in group_stats["members"]:
         first_name = member["first_name"]
         messages_count = member["messages_count"]
         forwards_count = member["forwards_count"]
