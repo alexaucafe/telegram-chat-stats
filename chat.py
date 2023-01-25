@@ -70,7 +70,7 @@ class Chat:
 
         return member_stats
 
-    def get_group_stats(self):
+    def get_group_stats(self, sort = True, reverse = False):
 
         group_stats = {
             "name": self.group_data["name"],
@@ -81,5 +81,11 @@ class Chat:
         for member_id in self.group_members:
             member_stats = self.get_member_stats(member_id)
             group_stats["members"].append(member_stats)
+        
+        if sort == True:
+            group_members_sorted = sorted(group_stats["members"],
+                                          key = lambda member: member["messages_count"],
+                                          reverse = not reverse)
+            group_stats["members"] = group_members_sorted
         
         return group_stats
