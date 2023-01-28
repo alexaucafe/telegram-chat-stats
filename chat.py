@@ -111,7 +111,3 @@ class Chat:
         # group_stats["days"] = days
         
         return group_stats
-
-group = Chat("result1.json")
-print(group.get_days())
-print(group.get_group_stats())
