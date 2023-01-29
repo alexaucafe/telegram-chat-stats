@@ -1,5 +1,7 @@
 import json
-import numpy as np
+from numpy import arange
+from numpy import datetime64
+from numpy import timedelta64
 
 class Chat:
 
@@ -72,9 +74,12 @@ class Chat:
         return member_stats
     
     def get_days(self, active_days_count: int = 5):
+
         start_date = self.group_messages[0]["date"]
         end_date = self.group_messages[-1]["date"]
-        dates = np.arange(np.datetime64(start_date, "D"), np.datetime64(end_date, "D"), np.timedelta64(1, "D"))
+        dates = arange(datetime64(start_date, "D"),
+                       datetime64(end_date, "D"),
+                       timedelta64(1, "D"))
 
         days = {"name":self.group_data["name"],
                 "active_days":[],
@@ -84,7 +89,9 @@ class Chat:
             date_messages = [m for m in self.group_messages if str(date) in m["date"]]
             days["days"].append({"date":date, "messages_count": len(date_messages)})
 
-        active_days = sorted(days["days"], key = lambda day: day["messages_count"], reverse = True)
+        active_days = sorted(days["days"],
+                             key = lambda day: day["messages_count"],
+                             reverse = True)
         days["active_days"] = active_days[:active_days_count]
 
         return days
