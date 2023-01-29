@@ -1,46 +1,32 @@
 from chat import Chat
+from text import Text
+from plotter import Plotter
 
 def main():
+    reverse = False
 
+    # Getting stats
     group = Chat()
-    group_stats = group.get_group_stats()
+    group_stats = group.get_group_stats(reverse = reverse)
 
-    text = txt(group_stats)
-    print(text)
+    # Getting text and saving as txt and png
+    text = Text(group_stats)
+    txt = text.txt
+    png = text.png(font_size=60)
 
     with open("result.txt", "w", encoding = "utf-8") as file:
-        file.write(text)
+        file.write(txt)
         file.close()
+        print(txt)
 
-def txt(group_stats, first_names = True):
+    png.save("result1.png")
 
-    text_lines: list = []
+    # Plotting and saving as png
+    plotter = Plotter(group_stats)
 
-    if first_names == True:
-        longest_name_member = max(group_stats["members"], key = lambda member: len(member["first_name"]))
-        longest_name_len = len(longest_name_member["first_name"])
-    else:
-        longest_name_member = max(group_stats["members"], key = lambda member: len(member["name"]))
-        longest_name_len = len(longest_name_member["name"])
-
-    spaces = " "*(longest_name_len + 2)
-    text_lines.append("{}{}\n".format(spaces, group_stats["name"]))
-
-    for member in group_stats["members"]:
-        if first_names == True:
-            name = member["first_name"]
-        else:
-            name = member["name"]
-        messages_count = member["messages_count"]
-        forwards_count = member["forwards_count"]
-        replies_count = member["replies_count"]
-
-        spaces = " "*(longest_name_len - len(name))
-        text_lines.append(f"{name}:{spaces} {messages_count} messages ({replies_count} replies, {forwards_count} forwarded)")
-    
-    spaces = " "*(longest_name_len + 2)
-    text_lines.append(f"\n{spaces}309:Дата-отдел")
-
-    return "\n".join(text_lines)
+    plt, fig = plotter.plot_members(reverse = reverse)
+    fig.savefig("figure1.png", bbox_inches='tight', dpi=300)
+    plt, fig = plotter.plot_days()
+    fig.savefig("figure2.png", bbox_inches='tight', dpi=300)
 
 main()

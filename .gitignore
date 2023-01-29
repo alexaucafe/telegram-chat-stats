@@ -1,5 +1,7 @@
 result.json
 result*
 *.pyc
+*.png
+*.txt
 
 .vscode
