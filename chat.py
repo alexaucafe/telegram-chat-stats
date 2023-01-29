@@ -71,7 +71,7 @@ class Chat:
 
         return member_stats
     
-    def get_days(self, active_days_count: int = 3):
+    def get_days(self, active_days_count: int = 5):
         start_date = self.group_messages[0]["date"]
         end_date = self.group_messages[-1]["date"]
         dates = np.arange(np.datetime64(start_date, "D"), np.datetime64(end_date, "D"), np.timedelta64(1, "D"))
@@ -85,7 +85,7 @@ class Chat:
             days["days"].append({"date":date, "messages_count": len(date_messages)})
 
         active_days = sorted(days["days"], key = lambda day: day["messages_count"], reverse = True)
-        days["active_days"] = active_days[:active_days_count-1]
+        days["active_days"] = active_days[:active_days_count]
 
         return days
 
@@ -107,7 +107,6 @@ class Chat:
                                           reverse = not reverse)
             group_stats["members"] = group_members_sorted
         
-        # days = self.get_days()
-        # group_stats["days"] = days
+        group_stats["days"] = self.get_days() # Active days count may be specified
         
         return group_stats
