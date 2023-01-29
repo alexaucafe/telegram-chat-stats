@@ -49,13 +49,13 @@ class Plotter:
 
         return plt, fig
     
-    def plot_days(self, days):
+    def plot_days(self):
 
         # Data
         dates = []
         messages = []
 
-        for day in days["days"]:
+        for day in self.group_stats["days"]["days"]:
             dates.append(day["date"])
             messages.append(day["messages_count"])
         
