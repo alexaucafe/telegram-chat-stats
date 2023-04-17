@@ -1,27 +1,32 @@
 from chat import Chat
+from text import Text
+from plotter import Plotter
 
 def main():
+    reverse = False
 
+    # Getting stats
     group = Chat()
-    group_stats = group.get_group_stats()
-    group_members_sorted = sorted(group_stats["members"], key = lambda member: member["messages_count"], reverse=True)
+    group_stats = group.get_group_stats(reverse = reverse)
 
-    longest_first_name = max(group_members_sorted, key = lambda member: len(member["first_name"]))
-    longest_name_len = len(longest_first_name["first_name"])
+    # Getting text and saving as txt and png
+    text = Text(group_stats)
+    txt = text.txt
+    png = text.png(font_size=60)
 
-    spaces = " "*(longest_name_len + 2)
-    print("{}{}\n".format(spaces, group_stats["name"]))
+    with open("result.txt", "w", encoding = "utf-8") as file:
+        file.write(txt)
+        file.close()
+        print(txt)
 
-    for member in group_members_sorted:
-        first_name = member["first_name"]
-        messages_count = member["messages_count"]
-        forwards_count = member["forwards_count"]
-        replies_count = member["replies_count"]
+    png.save("result1.png")
 
-        spaces = " "*(longest_name_len - len(first_name))
-        print(f"{first_name}:{spaces} {messages_count} messages ({replies_count} replies, {forwards_count} forwarded)")
-    
-    spaces = " "*(longest_name_len + 2)
-    print(f"\n{spaces}309:Дата-отдел")
+    # Plotting and saving as png
+    plotter = Plotter(group_stats)
+
+    plt, fig = plotter.plot_members(reverse = reverse)
+    fig.savefig("figure1.png", bbox_inches='tight', dpi=300)
+    plt, fig = plotter.plot_days()
+    fig.savefig("figure2.png", bbox_inches='tight', dpi=300)
 
 main()

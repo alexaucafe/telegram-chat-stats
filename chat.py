@@ -1,4 +1,7 @@
 import json
+from numpy import arange
+from numpy import datetime64
+from numpy import timedelta64
 
 class Chat:
 
@@ -69,8 +72,31 @@ class Chat:
         }
 
         return member_stats
+    
+    def get_days(self, active_days_count: int = 5):
 
-    def get_group_stats(self):
+        start_date = self.group_messages[0]["date"]
+        end_date = self.group_messages[-1]["date"]
+        dates = arange(datetime64(start_date, "D"),
+                       datetime64(end_date, "D"),
+                       timedelta64(1, "D"))
+
+        days = {"name":self.group_data["name"],
+                "active_days":[],
+                "days":[]}
+
+        for date in dates:
+            date_messages = [m for m in self.group_messages if str(date) in m["date"]]
+            days["days"].append({"date":date, "messages_count": len(date_messages)})
+
+        active_days = sorted(days["days"],
+                             key = lambda day: day["messages_count"],
+                             reverse = True)
+        days["active_days"] = active_days[:active_days_count]
+
+        return days
+
+    def get_group_stats(self, sort = True, reverse = False):
 
         group_stats = {
             "name": self.group_data["name"],
@@ -81,5 +107,13 @@ class Chat:
         for member_id in self.group_members:
             member_stats = self.get_member_stats(member_id)
             group_stats["members"].append(member_stats)
+        
+        if sort == True:
+            group_members_sorted = sorted(group_stats["members"],
+                                          key = lambda member: member["messages_count"],
+                                          reverse = not reverse)
+            group_stats["members"] = group_members_sorted
+        
+        group_stats["days"] = self.get_days() # Active days count may be specified
         
         return group_stats
